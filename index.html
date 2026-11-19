@@ -1,9 +1,166 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MA7 | Listado de 593 videos por sexo</title><style>*{box-sizing:border-box}body{background:#0b0b0b;color:#fafafa;font:15px system-ui,sans-serif;margin:0;padding:30px}main{max-width:1180px;margin:auto}h1{font-size:30px}h2{font-size:20px}.sub{color:#b4b4b6;line-height:1.5}.buttons{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}button{background:#f26a21;color:#181818;border:0;border-radius:10px;padding:12px 17px;font:700 14px system-ui;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button.alt{background:#252528;color:#f1f1f1;border:1px solid #4a4a4c}.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}.panel{background:#19191b;border:1px solid #424244;border-radius:16px;padding:18px;min-width:0}textarea{display:block;width:100%;height:55vh;background:#101012;color:#f0f0f0;border:1px solid #3a3a3c;border-radius:8px;padding:12px;resize:vertical;font:12px/1.6 Consolas,monospace}a{color:#f89852}#status{margin:10px 0;color:#ffba87}.count{font-size:13px;color:#aaa}@media(max-width:700px){.cols{grid-template-columns:1fr}body{padding:16px}} </style></head><body><main><h1>MA7 — URLs de videos por sexo</h1><p class="sub">Fuente: <a href="https://github.com/harshvishu/free-exercise-db-with-videos/blob/main/data/exercises.json" target="_blank" rel="noopener">catálogo original en GitHub</a>. Los listados se extraen del JSON oficial al abrir esta página; no se inventan enlaces faltantes. La disponibilidad de todos los videos y sus derechos comerciales no están garantizados.</p><p id="status">Cargando catálogo original…</p><div class="buttons"><button id="reload">Actualizar listados</button><button id="male" disabled>Descargar masculino (.txt)</button><button id="female" disabled>Descargar femenino (.txt)</button><button id="all" class="alt" disabled>Descargar catálogo completo (.txt)</button></div><div class="cols"><section class="panel"><h2>Masculino <span id="maleCount" class="count"></span></h2><textarea id="maleText" spellcheck="false" readonly placeholder="Cargando…"></textarea></section><section class="panel"><h2>Femenino <span id="femaleCount" class="count"></span></h2><textarea id="femaleText" spellcheck="false" readonly placeholder="Cargando…"></textarea></section></div><p class="sub">Cada registro ocupa dos líneas: nombre del ejercicio y URL directa MP4. Los archivos TXT se guardan en UTF-8. Necesita conexión a Internet para cargar o actualizar el catálogo.</p></main><script>
-const SOURCE='https://raw.githubusercontent.com/harshvishu/free-exercise-db-with-videos/main/data/exercises.json';
-let male=[],female=[];
-const el=id=>document.getElementById(id);
-function text(rows){return rows.map(r=>r.name+'\n'+r.url).join('\n\n')+'\n'}
-function download(filename,contents){const url=URL.createObjectURL(new Blob([contents],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-async function load(){el('status').textContent='Consultando catálogo original en GitHub…';for(const b of ['male','female','all'])el(b).disabled=true;try{const resp=await fetch(SOURCE,{cache:'no-store'});if(!resp.ok)throw Error('HTTP '+resp.status);const all=await resp.json();if(!Array.isArray(all))throw Error('Formato inesperado');male=[];female=[];for(const e of all){if(typeof e?.videos?.male==='string'&&/^https:\/\//.test(e.videos.male))male.push({name:e.name||e.id,url:e.videos.male});if(typeof e?.videos?.female==='string'&&/^https:\/\//.test(e.videos.female))female.push({name:e.name||e.id,url:e.videos.female})}el('maleText').value=text(male);el('femaleText').value=text(female);el('maleCount').textContent='('+male.length+' enlaces)';el('femaleCount').textContent='('+female.length+' enlaces)';el('status').textContent='Catálogo cargado: '+male.length+' masculinos + '+female.length+' femeninos = '+(male.length+female.length)+' URLs';for(const b of ['male','female','all'])el(b).disabled=false;}catch(err){el('status').textContent='No fue posible consultar GitHub: '+String(err)+'. Abra el archivo con Internet y pulse «Actualizar listados».'}}
-el('reload').onclick=load;el('male').onclick=()=>download('MA7_URL_Videos_Masculino_290.txt',text(male));el('female').onclick=()=>download('MA7_URL_Videos_Femenino_303.txt',text(female));el('all').onclick=()=>download('MA7_URL_Videos_Todos_593.txt','MASCULINO ('+male.length+')\n\n'+text(male)+'\nFEMENINO ('+female.length+')\n\n'+text(female));load();
-</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MA7 | Listado de videos por sexo</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{color-scheme:dark}
+    body{background:#0b0b0b;color:#fafafa;font:15px system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;padding:30px}
+    main{max-width:1180px;margin:auto}
+    h1{font-size:30px;margin:0 0 16px}
+    h2{font-size:20px;margin:0 0 15px}
+    h3{font-size:14px;margin:0 0 9px}
+    .sub{color:#b4b4b6;line-height:1.5}
+    .buttons{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}
+    button,.open-video{background:#f26a21;color:#181818;border:0;border-radius:10px;padding:12px 17px;font:700 14px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+    button:disabled{opacity:.4;cursor:not-allowed}
+    button.alt{background:#252528;color:#f1f1f1;border:1px solid #4a4a4c}
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .panel{background:#19191b;border:1px solid #424244;border-radius:16px;padding:18px;min-width:0}
+    textarea{display:block;width:100%;height:155px;background:#101012;color:#f0f0f0;border:1px solid #3a3a3c;border-radius:8px;padding:12px;resize:vertical;font:12px/1.6 Consolas,monospace}
+    .search{display:block;width:100%;background:#101012;color:#fafafa;border:1px solid #3a3a3c;border-radius:9px;padding:12px 14px;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;margin:12px 0}
+    .search::placeholder{color:#a8a8ad}
+    .search:focus{outline:2px solid #f26a21;outline-offset:1px}
+    .count{font-size:13px;color:#aaa}
+    #status{margin:10px 0;color:#ffba87}
+    a{color:#f89852}
+    .list-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px}
+    .list-header h3{margin:0}
+    .exercise-list{height:430px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-top:12px;padding:0 4px 2px 0}
+    .exercise-row{background:linear-gradient(135deg,#242426,#1b1b1e);border:1px solid #3a3a3c;border-radius:12px;padding:13px;display:flex;align-items:center;gap:12px;justify-content:space-between;min-width:0}
+    .exercise-info{min-width:0;flex:1}
+    .exercise-name{display:block;font-size:14px;line-height:1.35;font-weight:650;overflow-wrap:anywhere}
+    .exercise-url{display:block;font:11px/1.5 Consolas,monospace;color:#a8a8ad;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;margin-top:5px}
+    .open-video{flex:none;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;font-size:12px;padding:10px 12px;text-decoration:none;min-height:40px}
+    .open-video:hover,.open-video:focus-visible{background:#ff8a45;color:#101010;outline:2px solid #ffd1b6;outline-offset:2px}
+    .empty{color:#b4b4b6;font-size:13px;padding:16px;text-align:center;border:1px dashed #424244;border-radius:12px}
+    .text-heading{margin-top:20px}
+    @media(max-width:790px){.cols{grid-template-columns:1fr}body{padding:16px}.exercise-list{height:340px}}
+    @media(max-width:420px){.exercise-row{flex-direction:column;align-items:stretch}.open-video{width:100%}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>MA7 — URLs de videos por sexo</h1>
+  <p class="sub">Fuente: <a href="https://github.com/harshvishu/free-exercise-db-with-videos/blob/main/data/exercises.json" target="_blank" rel="noopener noreferrer">catálogo original en GitHub</a>. Los listados se extraen del JSON original al abrir esta página; no se inventan enlaces faltantes. La disponibilidad de todos los videos y sus derechos comerciales no están garantizados.</p>
+  <p id="status" role="status" aria-live="polite">Cargando catálogo original…</p>
+  <div class="buttons">
+    <button type="button" id="reload">Actualizar listados</button>
+    <button type="button" id="male" disabled>Descargar masculino (.txt)</button>
+    <button type="button" id="female" disabled>Descargar femenino (.txt)</button>
+    <button type="button" id="all" class="alt" disabled>Descargar catálogo completo (.txt)</button>
+  </div>
+  <div class="cols">
+    <section class="panel" aria-labelledby="maleTitle">
+      <h2 id="maleTitle">Masculino <span id="maleCount" class="count"></span></h2>
+      <div class="list-header"><h3>Ejercicios y videos</h3><span id="maleVisible" class="count"></span></div>
+      <input class="search" id="maleSearch" type="search" placeholder="Buscar ejercicio masculino…" aria-label="Buscar ejercicio masculino">
+      <div class="exercise-list" id="maleList" aria-label="Ejercicios masculinos"></div>
+      <h3 class="text-heading">URLs en texto (para copiar)</h3>
+      <textarea id="maleText" spellcheck="false" readonly placeholder="Cargando…" aria-label="Enlaces masculinos en texto"></textarea>
+    </section>
+    <section class="panel" aria-labelledby="femaleTitle">
+      <h2 id="femaleTitle">Femenino <span id="femaleCount" class="count"></span></h2>
+      <div class="list-header"><h3>Ejercicios y videos</h3><span id="femaleVisible" class="count"></span></div>
+      <input class="search" id="femaleSearch" type="search" placeholder="Buscar ejercicio femenino…" aria-label="Buscar ejercicio femenino">
+      <div class="exercise-list" id="femaleList" aria-label="Ejercicios femeninos"></div>
+      <h3 class="text-heading">URLs en texto (para copiar)</h3>
+      <textarea id="femaleText" spellcheck="false" readonly placeholder="Cargando…" aria-label="Enlaces femeninos en texto"></textarea>
+    </section>
+  </div>
+  <p class="sub">Pulsa <strong>«Abrir video»</strong> en cualquier ejercicio para ver su MP4 original en una pestaña nueva. El buscador filtra por nombre. Los archivos TXT conservan el nombre y la URL de cada ejercicio. Se requiere conexión a Internet para cargar o actualizar el catálogo.</p>
+</main>
+<script>
+'use strict';
+const SOURCE = 'https://raw.githubusercontent.com/harshvishu/free-exercise-db-with-videos/main/data/exercises.json';
+let male = [], female = [];
+const el = id => document.getElementById(id);
+function text(rows) { return rows.map(r => r.name + '\n' + r.url).join('\n\n') + '\n'; }
+function download(filename, contents) {
+  const url = URL.createObjectURL(new Blob([contents], { type: 'text/plain;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function renderList(sex) {
+  const rows = sex === 'male' ? male : female;
+  const query = el(sex + 'Search').value.trim().toLocaleLowerCase('es');
+  const filtered = query ? rows.filter(r => r.name.toLocaleLowerCase('es').includes(query)) : rows;
+  const list = el(sex + 'List');
+  const fragment = document.createDocumentFragment();
+  for (const row of filtered) {
+    const item = document.createElement('div');
+    item.className = 'exercise-row';
+    const info = document.createElement('div');
+    info.className = 'exercise-info';
+    const name = document.createElement('strong');
+    name.className = 'exercise-name';
+    name.textContent = row.name;
+    const url = document.createElement('span');
+    url.className = 'exercise-url';
+    url.textContent = row.url;
+    url.title = row.url;
+    info.append(name, url);
+    const open = document.createElement('a');
+    open.className = 'open-video';
+    open.href = row.url;
+    open.target = '_blank';
+    open.rel = 'noopener noreferrer';
+    open.textContent = 'Abrir video ↗';
+    open.setAttribute('aria-label', 'Abrir video de ' + row.name + ' (' + (sex === 'male' ? 'masculino' : 'femenino') + ')');
+    item.append(info, open);
+    fragment.appendChild(item);
+  }
+  if (!filtered.length) {
+    const message = document.createElement('p');
+    message.className = 'empty';
+    message.textContent = rows.length ? 'No se encontraron ejercicios.' : 'No hay ejercicios para mostrar.';
+    fragment.appendChild(message);
+  }
+  list.replaceChildren(fragment);
+  el(sex + 'Visible').textContent = filtered.length + ' visibles';
+}
+async function load() {
+  el('status').textContent = 'Consultando catálogo original en GitHub…';
+  for (const b of ['male', 'female', 'all']) el(b).disabled = true;
+  try {
+    const resp = await fetch(SOURCE, { cache: 'no-store' });
+    if (!resp.ok) throw Error('HTTP ' + resp.status);
+    const all = await resp.json();
+    if (!Array.isArray(all)) throw Error('Formato inesperado');
+    const nextMale = [], nextFemale = [];
+    for (const e of all) {
+      if (typeof e?.videos?.male === 'string' && /^https:\/\//.test(e.videos.male)) nextMale.push({ name: String(e.name || e.id || 'Ejercicio'), url: e.videos.male });
+      if (typeof e?.videos?.female === 'string' && /^https:\/\//.test(e.videos.female)) nextFemale.push({ name: String(e.name || e.id || 'Ejercicio'), url: e.videos.female });
+    }
+    male = nextMale;
+    female = nextFemale;
+    el('maleText').value = text(male);
+    el('femaleText').value = text(female);
+    el('maleCount').textContent = '(' + male.length + ' enlaces)';
+    el('femaleCount').textContent = '(' + female.length + ' enlaces)';
+    renderList('male');
+    renderList('female');
+    el('status').textContent = 'Catálogo cargado: ' + male.length + ' masculinos + ' + female.length + ' femeninos = ' + (male.length + female.length) + ' URLs';
+    for (const b of ['male', 'female', 'all']) el(b).disabled = false;
+  } catch (err) {
+    el('status').textContent = 'No fue posible consultar GitHub: ' + String(err) + '. Compruebe Internet y pulse «Actualizar listados».';
+    if (!male.length && !female.length) { renderList('male'); renderList('female'); }
+  }
+}
+el('reload').onclick = load;
+el('male').onclick = () => download('MA7_URL_Videos_Masculino_' + male.length + '.txt', text(male));
+el('female').onclick = () => download('MA7_URL_Videos_Femenino_' + female.length + '.txt', text(female));
+el('all').onclick = () => download('MA7_URL_Videos_Todos_' + (male.length + female.length) + '.txt', 'MASCULINO (' + male.length + ')\n\n' + text(male) + '\nFEMENINO (' + female.length + ')\n\n' + text(female));
+el('maleSearch').addEventListener('input', () => renderList('male'));
+el('femaleSearch').addEventListener('input', () => renderList('female'));
+load();
+</script>
+</body>
+</html>
